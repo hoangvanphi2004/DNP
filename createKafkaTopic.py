@@ -11,7 +11,7 @@ def createKafkaServer():
 
     for name in ['bounding_box', 'frame']:
         topic_name = name
-        num_partitions = 2
+        num_partitions = 1
         replication_factor = 1
         new_topics.append(NewTopic(topic_name, num_partitions, replication_factor))
 

@@ -2,10 +2,11 @@ import consumer
 import producer
 import boundingBoxDetection
 import cv2 as cv
+import time
 
 if __name__ == "__main__":
-    frameConsumer = consumer.FrameConsumer()
-    boundingBoxPrediction = boundingBoxDetection.YOLOv8()
+    frameConsumer = consumer.FrameConsumer("frame")
+    boundingBoxPrediction = boundingBoxDetection.YOLOv5()
     boundingBoxProducer = producer.BoundingBoxProducer()
     try:
         while True:
@@ -14,7 +15,7 @@ if __name__ == "__main__":
                 boundingBox = boundingBoxPrediction.predict(frame)
                 boundingBox = {
                     "offset": offset,
-                    "data": boundingBox    
+                    "data": boundingBox,
                 }
                 boundingBoxProducer.send_bounding_box(bounding_box = boundingBox)
             #     cv.imshow("frame", frame)
@@ -22,6 +23,7 @@ if __name__ == "__main__":
             #         break
             # else:
             #     cv.destroyAllWindows()
+            #time.sleep(0.5)
     except KeyboardInterrupt:
         pass
     finally:

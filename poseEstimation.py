@@ -14,9 +14,9 @@ class PoseEstimation:
         self.model = init_model(config_file, checkpoint_file, device="cuda:0")
 
     def predict(self, frame, bounding_box):
-        # (480, 640, 3)
-        #print(frame.shape)
-        #print(bounding_box)
+        #(480, 640, 3)
+        # print(frame.shape)
+        # print(bounding_box)
 
         obj = frame[int(bounding_box[1]): int(bounding_box[3]), int(bounding_box[0]): int(bounding_box[2]), :]
         results = inference_topdown(self.model, obj)
