@@ -46,9 +46,9 @@ class FrameConsumer(KafkaConsumer):
         return False, 0, 0
     
     def receive_latest_frame(self):
-        latest_offset = self.consumer.get_watermark_offsets(self.topic)[1]
-        topic_with_latest_offset = TopicPartition("frame", partition = 0, offset = latest_offset)
-        self.consumer.assign([topic_with_latest_offset])
+        # latest_offset = self.consumer.get_watermark_offsets(self.topic)[1]
+        # topic_with_latest_offset = TopicPartition("frame", partition = 0, offset = latest_offset)
+        # self.consumer.assign([topic_with_latest_offset])
 
         #print(self.consumer.assignment())
 

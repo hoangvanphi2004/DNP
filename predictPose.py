@@ -32,42 +32,42 @@ if __name__ == "__main__":
             #print("finish receive bounding box")
             time3 = time.time()
 
-            if retBoundingBox:
-                print("->", offsetFrame, offsetBoundingBox)
+            # if retBoundingBox:
+            #     print("->", offsetFrame, offsetBoundingBox)
 
-            # if retFrame:
-            #     #print(data);
-            #     frames.append({
-            #         "offset": offsetFrame,
-            #         "data": frame
-            #     }); 
-            #     if retBoundingBox:
-            #         print(len(frames))
-            #         frame = [frame for frame in frames if frame["offset"] == boundingBoxData["offset"]][0]["data"]
-            #         bounding_boxs = boundingBoxData["data"]
-            #         #print(frame, bounding_boxs)
+            if retFrame:
+                #print(data);
+                frames.append({
+                    "offset": offsetFrame,
+                    "data": frame
+                }); 
+                if retBoundingBox:
+                    print(len(frames))
+                    frame = [frame for frame in frames if frame["offset"] == boundingBoxData["offset"]][0]["data"]
+                    bounding_boxs = boundingBoxData["data"]
+                    #print(frame, bounding_boxs)
 
-            #         showing_frame = frame
-            #         allKeypoints = []
-            #         humanBoundingBox = []
-            #         for bounding_box in bounding_boxs:
-            #             if bounding_box[6] == 0:
-            #                 keypoints = poseEstimationModel.predict(frame, bounding_box)
-            #                 showing_frame = draw(bounding_box, keypoints, frame)
-            #                 allKeypoints.append(keypoints.tolist())
-            #                 humanBoundingBox.append(bounding_box)
+                    showing_frame = frame
+                    allKeypoints = []
+                    humanBoundingBox = []
+                    for bounding_box in bounding_boxs:
+                        if bounding_box[6] == 0:
+                            keypoints = poseEstimationModel.predict(frame, bounding_box)
+                            showing_frame = draw(bounding_box, keypoints, frame)
+                            allKeypoints.append(keypoints.tolist())
+                            humanBoundingBox.append(bounding_box)
 
-            #         videoWriter.write(showing_frame)
+                    videoWriter.write(showing_frame)
 
-            #         if(len(humanBoundingBox) != 0):
-            #             bounding_boxs = np.array(humanBoundingBox)
-            #             jsonWriter.write_data(boundingBoxs = bounding_boxs[:, : 4], ids = bounding_boxs[:, 4], keypointsList = allKeypoints, frameId = boundingBoxData["offset"])
+                    if(len(humanBoundingBox) != 0):
+                        bounding_boxs = np.array(humanBoundingBox)
+                        jsonWriter.write_data(boundingBoxs = bounding_boxs[:, : 4], ids = bounding_boxs[:, 4], keypointsList = allKeypoints, frameId = boundingBoxData["offset"])
 
-            #         # cv.imshow('frame', showing_frame)
-            #         # if cv.waitKey(1) == ord('q'):
-            #         #     break
+                    # cv.imshow('frame', showing_frame)
+                    # if cv.waitKey(1) == ord('q'):
+                    #     break
 
-            #         frames = [frame for frame in frames if frame["offset"] != boundingBoxData["offset"]]
+                    frames = [frame for frame in frames if frame["offset"] != boundingBoxData["offset"]]
             #else:
                 # cv.destroyAllWindows()
             time4 = time.time();
