@@ -29,8 +29,9 @@ conda activate DNP
 docker-compose up
 ```
 ```bash
+conda activate DNP
 python createKafkaTopic.py
-python sendVideo.py
+python predictPose.py
 ```
 ```bash
 conda activate DNP
@@ -38,5 +39,5 @@ python predictBoundingBox.py
 ```
 ```bash
 conda activate DNP
-python predictPose.py
+python sendVideo.py
 ```
