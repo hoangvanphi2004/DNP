@@ -19,7 +19,11 @@ mim install "mmpose>=1.1.0"
 conda install -c conda-forge ultralytics
 pip install boxmot
 ```
-5. Run each block in different commandline windows:
+5. Download the config file:
+```bash
+mim download mmpose --config td-hm_hrnet-w48_8xb32-210e_coco-256x192  --dest .
+```
+6. Run each block in different commandline windows:
 ```bash
 conda activate DNP
 docker-compose up
