@@ -19,7 +19,7 @@ mim install "mmpose>=1.1.0"
 conda install -c conda-forge ultralytics
 pip install boxmot
 ```
-5. Run each block in different commandline window:
+5. Run each block in different commandline windows:
 ```bash
 conda activate DNP
 docker-compose up
