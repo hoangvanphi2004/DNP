@@ -2,7 +2,7 @@
 ## 1. Introduce
 The purpose of this project is to build a system to detect people pose in a video.
 ## 2. How to use
-1. First you need to download docker and run docker, install miniconda and install conda
+1. First you need to download docker and run docker, install miniconda and install cuda
 2. Clone this repo
 3. Now, install Kafka:
 ```bash
