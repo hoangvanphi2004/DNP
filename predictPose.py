@@ -5,6 +5,7 @@ import writeToJSON
 import cv2 as cv
 import numpy as np
 import time
+from queue import Queue
 
 def draw(bounding_box, keypoints, frame):
     result = frame
@@ -22,30 +23,38 @@ if __name__ == "__main__":
     videoWriter = writeVideo.VideoWriter()
     jsonWriter = writeToJSON.JSONWriter()
     try:
-        frames = []
+        frames = Queue()
         while True:
             time1 = time.time()
             retFrame, frame, offsetFrame = frameConsumer.receive_frame()
             #print("finish receive frame")
             time2 = time.time()
             retBoundingBox, boundingBoxData, offsetBoundingBox = boundingBoxConsumer.receive_bounding_box()
+            # retBoundingBox = None
             #print("finish receive bounding box")
             time3 = time.time()
 
             # if retBoundingBox:
             #     print("->", offsetFrame, offsetBoundingBox)
 
-            if retFrame:
+            if retFrame or retBoundingBox:
                 #print(data);
-                frames.append({
+                frames.put({
                     "offset": offsetFrame,
                     "data": frame
                 }); 
                 if retBoundingBox:
-                    print(len(frames))
-                    frame = [frame for frame in frames if frame["offset"] == boundingBoxData["offset"]][0]["data"]
+                    #print(frames.qsize())
+                    frame = frames.get()
+                    while frame['offset'] < boundingBoxData['offset']:
+                        frame = frames.get()
+                        pass
+                    
+                    #print(frames.qsize(), "frame", frame['offset'], "bounding_box", boundingBoxData['offset'])
+                    frame = frame['data']
                     bounding_boxs = boundingBoxData["data"]
                     #print(frame, bounding_boxs)
+                    
 
                     showing_frame = frame
                     allKeypoints = []
@@ -66,8 +75,7 @@ if __name__ == "__main__":
                     # cv.imshow('frame', showing_frame)
                     # if cv.waitKey(1) == ord('q'):
                     #     break
-
-                    frames = [frame for frame in frames if frame["offset"] != boundingBoxData["offset"]]
+                    # frames = [frame for frame in frames if frame["offset"] != boundingBoxData["offset"]]
             #else:
                 # cv.destroyAllWindows()
             time4 = time.time();
@@ -75,5 +83,6 @@ if __name__ == "__main__":
     except KeyboardInterrupt:
         pass
     finally:
-        videoWriter.video.release()
-        # boundingBoxAndFrameConsumer.consumer.close()
+        # videoWriter.video.release()
+        boundingBoxConsumer.consumer.close()
+        frameConsumer.consumer.close()

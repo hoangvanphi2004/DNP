@@ -39,5 +39,4 @@ class BoundingBoxProducer(KafkaProducer):
     def send_bounding_box(self, bounding_box):
         self.producer.produce("bounding_box", value = json.dumps(bounding_box), callback=self.delivery_callback)
         self.producer.poll(0)
-
         

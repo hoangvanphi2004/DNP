@@ -9,7 +9,10 @@ if __name__ == "__main__":
 
     cnt = 0
     while True:
+        time1 = time.time();
         ret, frame, frame_number  = videoReader.read_frame()
+        time2 = time.time();
+
         if not ret:
             break
         frame = cv.resize(frame, (640, 480))
@@ -18,6 +21,8 @@ if __name__ == "__main__":
             cnt += 1
         else:
             break
-        #time.sleep(0.1)
+        time3 = time.time();
+        time.sleep(0.3)
+        print(time2 - time1, " -> ", time3 - time2);
     frameProducer.producer.flush()
     

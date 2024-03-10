@@ -10,7 +10,10 @@ if __name__ == "__main__":
     boundingBoxProducer = producer.BoundingBoxProducer()
     try:
         while True:
+            time1 = time.time()
             ret, frame, offset = frameConsumer.receive_latest_frame()
+            time2 = time.time();
+
             if ret:
                 boundingBox = boundingBoxPrediction.predict(frame)
                 boundingBox = {
@@ -18,6 +21,9 @@ if __name__ == "__main__":
                     "data": boundingBox,
                 }
                 boundingBoxProducer.send_bounding_box(bounding_box = boundingBox)
+            time3 = time.time()
+            
+            # print(time2 - time1, " -> ", time3 - time2);
             #     cv.imshow("frame", frame)
             #     if cv.waitKey(1) == ord('q'):
             #         break
