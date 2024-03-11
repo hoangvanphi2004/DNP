@@ -1,4 +1,5 @@
 import consumer
+import producer
 import poseEstimation
 import writeVideo
 import writeToJSON
@@ -7,20 +8,11 @@ import numpy as np
 import time
 from queue import Queue
 
-def draw(bounding_box, keypoints, frame):
-    result = frame
-    cv.rectangle(result, (int(bounding_box[0]), int(bounding_box[1])), (int(bounding_box[2]), int(bounding_box[3])), (255, 0, 0), 4)
-    
-    cv.putText(result, str(int(bounding_box[4])), (int(bounding_box[0]), int(bounding_box[1])), cv.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv.LINE_AA)
-    for keypoint in keypoints:
-        cv.circle(result, (int(keypoint[0]), int(keypoint[1])), radius = 2, color = (0, 255, 0), thickness = -1)
-    return result
-
 if __name__ == "__main__":
+    keypointsProducer = producer.KeyPointsProducer()
     boundingBoxConsumer = consumer.BoundingBoxConsumer("FandB")
     frameConsumer = consumer.FrameConsumer("FandB")
     poseEstimationModel = poseEstimation.PoseEstimation()
-    videoWriter = writeVideo.VideoWriter()
     jsonWriter = writeToJSON.JSONWriter()
     try:
         frames = Queue()
@@ -32,57 +24,60 @@ if __name__ == "__main__":
             retBoundingBox, boundingBoxData, offsetBoundingBox = boundingBoxConsumer.receive_bounding_box()
             # retBoundingBox = None
             #print("finish receive bounding box")
-            time3 = time.time()
 
             # if retBoundingBox:
             #     print("->", offsetFrame, offsetBoundingBox)
 
-            if retFrame or retBoundingBox:
+            if retFrame:
                 #print(data);
                 frames.put({
                     "offset": offsetFrame,
                     "data": frame
                 }); 
-                if retBoundingBox:
-                    #print(frames.qsize())
+            if retBoundingBox:
+                #print(frames.qsize())
+                frame = frames.get()
+                while frame['offset'] < boundingBoxData['offset']:
                     frame = frames.get()
-                    while frame['offset'] < boundingBoxData['offset']:
-                        frame = frames.get()
-                        pass
-                    
-                    #print(frames.qsize(), "frame", frame['offset'], "bounding_box", boundingBoxData['offset'])
-                    frame = frame['data']
-                    bounding_boxs = boundingBoxData["data"]
-                    #print(frame, bounding_boxs)
-                    
+                    pass
+                
+                #print(frames.qsize(), "frame", frame['offset'], "bounding_box", boundingBoxData['offset'])
+                offset = frame['offset']
+                frame = frame['data']
+                bounding_boxs = boundingBoxData["data"]
+                #print(frame, bounding_boxs)
+                
+                time3 = time.time()
+                showing_frame = frame
+                allKeypoints = []
+                humanBoundingBox = []
+                for bounding_box in bounding_boxs:
+                    keypoints = poseEstimationModel.predict(frame, bounding_box)
+                    #showing_frame = draw(bounding_box, keypoints, frame)
+                    allKeypoints.append(keypoints.tolist())
+                    humanBoundingBox.append(bounding_box)
 
-                    showing_frame = frame
-                    allKeypoints = []
-                    humanBoundingBox = []
-                    for bounding_box in bounding_boxs:
-                        if bounding_box[6] == 0:
-                            keypoints = poseEstimationModel.predict(frame, bounding_box)
-                            showing_frame = draw(bounding_box, keypoints, frame)
-                            allKeypoints.append(keypoints.tolist())
-                            humanBoundingBox.append(bounding_box)
+                #videoWriter.write(showing_frame)
 
-                    videoWriter.write(showing_frame)
+                if(len(humanBoundingBox) != 0):
+                    bounding_boxs = np.array(humanBoundingBox)
+                    jsonWriter.write_data(boundingBoxs = bounding_boxs[:, : 4], ids = bounding_boxs[:, 4], keypointsList = allKeypoints, frameId = boundingBoxData["offset"])
 
-                    if(len(humanBoundingBox) != 0):
-                        bounding_boxs = np.array(humanBoundingBox)
-                        jsonWriter.write_data(boundingBoxs = bounding_boxs[:, : 4], ids = bounding_boxs[:, 4], keypointsList = allKeypoints, frameId = boundingBoxData["offset"])
+                ### -------------------Send Keypoints---------------------###
 
-                    # cv.imshow('frame', showing_frame)
-                    # if cv.waitKey(1) == ord('q'):
-                    #     break
-                    # frames = [frame for frame in frames if frame["offset"] != boundingBoxData["offset"]]
-            #else:
-                # cv.destroyAllWindows()
-            time4 = time.time();
-            #print(time4 - time3, time3 - time2, time2 - time1);
+                keypoints = {
+                    "offset": offset,
+                    "data": allKeypoints
+                }
+
+                keypointsProducer.send_keypoints(keypoints)
+
+                time4 = time.time();
+                print(time4 - time3, time3 - time2, time2 - time1);
     except KeyboardInterrupt:
         pass
     finally:
         # videoWriter.video.release()
         boundingBoxConsumer.consumer.close()
         frameConsumer.consumer.close()
+        keypointsProducer.producer.flush()

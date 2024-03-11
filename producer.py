@@ -36,7 +36,15 @@ class BoundingBoxProducer(KafkaProducer):
     def __init__(self):
         super().__init__()
 
-    def send_bounding_box(self, bounding_box):
-        self.producer.produce("bounding_box", value = json.dumps(bounding_box), callback=self.delivery_callback)
+    def send_bounding_box(self, boundingBox):
+        self.producer.produce("bounding_box", value = json.dumps(boundingBox), callback=self.delivery_callback)
+        self.producer.poll(0)
+
+class KeyPointsProducer(KafkaProducer):
+    def __init__(self):
+        super().__init__()
+
+    def send_keypoints(self, keypoints):
+        self.producer.produce("keypoints", value = json.dumps(keypoints), callback=self.delivery_callback)
         self.producer.poll(0)
         

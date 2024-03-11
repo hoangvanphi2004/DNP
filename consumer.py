@@ -94,4 +94,21 @@ class BoundingBoxConsumer(KafkaConsumer):
                 topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, json.loads(msg.value()), msg.offset()
         return False, 0, 0
+    
+class KeypointsConsumer(KafkaConsumer):
+    def __init__(self, groupId):
+        super().__init__(groupId = groupId, topics = "keypoints")
+        
+    def receive_keypoints(self):
+        msg = self.consumer.poll(0)
+        if msg is None:
+            #print("Waiting...")
+            pass
+        elif msg.error():
+            print("ERROR: %s".format(msg.error()))
+        else:
+            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
+                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
+            return True, json.loads(msg.value()), msg.offset()
+        return False, 0, 0
 

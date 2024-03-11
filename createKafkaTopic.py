@@ -9,7 +9,7 @@ def createKafkaServer():
     admin_client = AdminClient(config)
     new_topics = []
 
-    for name in ['bounding_box', 'frame']:
+    for name in ['bounding_box', 'frame', 'keypoints']:
         topic_name = name
         num_partitions = 1
         replication_factor = 1

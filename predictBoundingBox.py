@@ -20,7 +20,7 @@ if __name__ == "__main__":
                     "offset": offset,
                     "data": boundingBox,
                 }
-                boundingBoxProducer.send_bounding_box(bounding_box = boundingBox)
+                boundingBoxProducer.send_bounding_box(boundingBox)
             time3 = time.time()
             
             # print(time2 - time1, " -> ", time3 - time2);
@@ -35,3 +35,4 @@ if __name__ == "__main__":
     finally:
         # cv.destroyAllWindows()
         frameConsumer.consumer.close()
+        boundingBoxProducer.producer.flush()

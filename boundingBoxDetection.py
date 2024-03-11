@@ -16,6 +16,7 @@ class YOLOv5:
 
     def predict(self, frame):
         bounding_box = np.array(self.model(frame).xyxy[0].cpu())
+        bounding_box = bounding_box[bounding_box[:, 5] == 0]
         results = self.tracker.update(bounding_box, np.array(frame))
         return results.tolist()
     
