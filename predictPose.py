@@ -13,7 +13,6 @@ if __name__ == "__main__":
     boundingBoxConsumer = consumer.BoundingBoxConsumer("FandB")
     frameConsumer = consumer.FrameConsumer("FandB")
     poseEstimationModel = poseEstimation.PoseEstimation()
-    jsonWriter = writeToJSON.JSONWriter()
     try:
         frames = Queue()
         while True:
@@ -58,10 +57,6 @@ if __name__ == "__main__":
                     humanBoundingBox.append(bounding_box)
 
                 #videoWriter.write(showing_frame)
-
-                if(len(humanBoundingBox) != 0):
-                    bounding_boxs = np.array(humanBoundingBox)
-                    jsonWriter.write_data(boundingBoxs = bounding_boxs[:, : 4], ids = bounding_boxs[:, 4], keypointsList = allKeypoints, frameId = boundingBoxData["offset"])
 
                 ### -------------------Send Keypoints---------------------###
 

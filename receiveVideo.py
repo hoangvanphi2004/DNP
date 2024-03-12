@@ -2,8 +2,11 @@ import consumer
 import producer
 import boundingBoxDetection
 import cv2 as cv
+import numpy as np
 import time
 import writeVideo
+import writeToJSON
+
 from queue import Queue
 
 def draw(bounding_box, keypoints, frame):
@@ -20,6 +23,7 @@ if __name__ == "__main__":
     boundingBoxConsumer = consumer.BoundingBoxConsumer("receive_video")
     keypointsConsumer = consumer.KeypointsConsumer("receive_video")
     videoWriter = writeVideo.VideoWriter()
+    jsonWriter = writeToJSON.JSONWriter()
     try:
         framesQueue = Queue()
         boundingBoxsQueue = Queue()
@@ -54,7 +58,13 @@ if __name__ == "__main__":
                 boundingBoxs = boundingBoxs["data"]
                 keypointsList = keypointsData["data"]
                 
+                if len(boundingBoxs) != 0:
+                    boundingBoxs = np.array(boundingBoxs)
+                    jsonWriter.write_data(boundingBoxs = boundingBoxs[:, : 4], ids = boundingBoxs[:, 4], keypointsList = keypointsList, frameId = keypointsData["offset"])
+                
                 #print("frame", frame, "bb", len(boundingBoxs), "kps", len(keypointsList))
+
+                showing_frame = frame
 
                 for index in range(len(boundingBoxs)):
                     keypoints = keypointsList[index]
