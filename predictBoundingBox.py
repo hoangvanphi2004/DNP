@@ -3,25 +3,46 @@ import producer
 import boundingBoxDetection
 import cv2 as cv
 import time
+import os
 
 if __name__ == "__main__":
-    frameConsumer = consumer.FrameConsumer("frame")
+    latestFrameConsumer = consumer.LatestFrameConsumer("latest_frame")
+    frameProducer = producer.FrameProducer()
     boundingBoxPrediction = boundingBoxDetection.YOLOv5()
     boundingBoxProducer = producer.BoundingBoxProducer()
+    keypointsConsumer = consumer.KeypointsConsumer("receive_back_keypoints")
+    setupProducer = producer.SetupProducer()
+    setupProducer.send_setup_value(0)
+    setupProducer.producer.flush()
+    setupConsumer = consumer.SetupConsumer("end")
+    
+    boundingBox = None
+    firstTime = True
+    isEnd = False
     try:
         while True:
-            time1 = time.time()
-            ret, frame, offset = frameConsumer.receive_latest_frame()
-            time2 = time.time();
-
-            if ret:
-                boundingBox = boundingBoxPrediction.predict(frame)
-                boundingBox = {
-                    "offset": offset,
-                    "data": boundingBox,
-                }
+            retKeypoints, keypointsData, _ = keypointsConsumer.receive_keypoints()
+            retSetup, value = setupConsumer.receive_setup_value()
+            
+            if retSetup and value == 3:
+                isEnd = True
+                
+            if boundingBox == None:
+                retFrame, frame, offset = latestFrameConsumer.receive_latest_frame()
+                if retFrame:
+                    boundingBox = boundingBoxPrediction.predict(frame)
+                    boundingBox = {
+                        "offset": offset,
+                        "data": boundingBox,
+                    }
+                elif isEnd:
+                    break
+                
+            if (retKeypoints or firstTime) and boundingBox != None:
+                frameProducer.send_frame(frame, offset)
                 boundingBoxProducer.send_bounding_box(boundingBox)
-            time3 = time.time()
+                boundingBox = None
+                firstTime = False
             
             # print(time2 - time1, " -> ", time3 - time2);
             #     cv.imshow("frame", frame)
@@ -34,5 +55,8 @@ if __name__ == "__main__":
         pass
     finally:
         # cv.destroyAllWindows()
-        frameConsumer.consumer.close()
+        latestFrameConsumer.consumer.close()
+        keypointsConsumer.consumer.close()
         boundingBoxProducer.producer.flush()
+        frameProducer.producer.flush()
+    os.system("./close.sh")

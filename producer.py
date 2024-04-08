@@ -24,12 +24,23 @@ class KafkaProducer:
             print("Produced event to topic {topic}".format(
                 topic=msg.topic()))
             
+class SetupProducer(KafkaProducer):
+    def __init__(self):
+        super().__init__()
+
+    def send_setup_value(self, setupValue):
+        self.producer.produce("setup", value = str(setupValue), callback=self.delivery_callback)
+        self.producer.poll(0)
 class FrameProducer(KafkaProducer):
     def __init__(self):
         super().__init__()
 
-    def send_frame(self, frame):
-        self.producer.produce("frame", value = frame.tobytes(), callback=self.delivery_callback)
+    def send_frame(self, frame, offset):
+        self.producer.produce("frame", value = frame.tobytes(), key = str(offset), callback=self.delivery_callback)
+        self.producer.poll(0)
+        
+    def send_latest_frame(self, frame):
+        self.producer.produce("latest_frame", value = frame.tobytes(), callback=self.delivery_callback)
         self.producer.poll(0)
 
 class BoundingBoxProducer(KafkaProducer):

@@ -2,8 +2,11 @@ import consumer
 import producer
 import boundingBoxDetection
 import cv2 as cv
+import numpy as np
 import time
 import writeVideo
+import writeToJSON
+
 from queue import Queue
 
 def draw(bounding_box, keypoints, frame):
@@ -20,41 +23,65 @@ if __name__ == "__main__":
     boundingBoxConsumer = consumer.BoundingBoxConsumer("receive_video")
     keypointsConsumer = consumer.KeypointsConsumer("receive_video")
     videoWriter = writeVideo.VideoWriter()
+    jsonWriter = writeToJSON.JSONWriter()
+    setupProducer = producer.SetupProducer()
+    setupProducer.send_setup_value(2)
+    setupProducer.producer.flush()
+    
     try:
-        framesQueue = Queue()
-        boundingBoxsQueue = Queue()
+        framesQueue = []
+        boundingBoxsQueue = []
+        keypointsQueue = []
         while True:
             retBoundingBox, boundingBoxData, offset = boundingBoxConsumer.receive_bounding_box()
             retKeypoints, keypointsData, offset = keypointsConsumer.receive_keypoints()
             retFrame, frame, offset = frameConsumer.receive_frame()
-
-
+                
             if retFrame:
-                framesQueue.put({
-                    "offset": offset,
-                    "data": frame
-                });
+                framesQueue.append(frame);
              
             if retBoundingBox:
-                boundingBoxsQueue.put(boundingBoxData)
+                boundingBoxsQueue.append(boundingBoxData)
 
             if retKeypoints:
-                print(framesQueue.qsize(), boundingBoxsQueue.qsize(), keypointsData['offset'])
-                frame = framesQueue.get()
-                while frame['offset'] < keypointsData['offset']:
-                    frame = framesQueue.get()
-                    pass
+                keypointsQueue.append(keypointsData)
+
+            while(len(keypointsQueue) > 0 and len(boundingBoxsQueue) > 0 and len(framesQueue) > 0):
+                #print(framesQueue.qsize(), boundingBoxsQueue.qsize(), keypointsData['offset'])
+                keypointsData = keypointsQueue[0]
+                frame = framesQueue[0]
+                while frame['offset'] < keypointsData['offset'] and len(framesQueue) > 1:
+                    framesQueue.pop(0)
+                    frame = framesQueue[0]
                 
-                boundingBoxs = boundingBoxsQueue.get()
-                while boundingBoxs['offset'] < keypointsData['offset']:
-                    boundingBoxs = boundingBoxsQueue.get()
-                    pass
+                if(frame["offset"] < keypointsData["offset"]):
+                    framesQueue.pop(0)
+                    break;
+                
+                boundingBoxs = boundingBoxsQueue[0]
+                while boundingBoxs['offset'] < keypointsData['offset'] and len(boundingBoxsQueue) > 1:
+                    boundingBoxsQueue.pop(0)
+                    boundingBoxs = boundingBoxsQueue[0]
+                
+                if(boundingBoxs["offset"] < keypointsData["offset"]):
+                    boundingBoxsQueue.pop(0)
+                    break;
+                
+                framesQueue.pop(0)
+                boundingBoxsQueue.pop(0)
+                keypointsQueue.pop(0)
                 
                 frame = frame['data']
                 boundingBoxs = boundingBoxs["data"]
                 keypointsList = keypointsData["data"]
                 
+                if len(boundingBoxs) != 0:
+                    boundingBoxs = np.array(boundingBoxs)
+                    jsonWriter.write_data(boundingBoxs = boundingBoxs[:, : 4], ids = boundingBoxs[:, 4], keypointsList = keypointsList, frameId = keypointsData["offset"])
+                
                 #print("frame", frame, "bb", len(boundingBoxs), "kps", len(keypointsList))
+
+                showing_frame = frame
 
                 for index in range(len(boundingBoxs)):
                     keypoints = keypointsList[index]
