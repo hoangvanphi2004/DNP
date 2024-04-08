@@ -117,12 +117,12 @@ def build_norm_layer(cfg: Dict,
     requires_grad = cfg_.pop('requires_grad', True)
     cfg_.setdefault('eps', 1e-5)
     if norm_layer is not nn.GroupNorm:
-        layer = norm_layer(num_features, **cfg_)
+        layer = norm_layer(num_features, device="cuda", **cfg_)
         if layer_type == 'SyncBN' and hasattr(layer, '_specify_ddp_gpu_num'):
             layer._specify_ddp_gpu_num(1)
     else:
         assert 'num_groups' in cfg_
-        layer = norm_layer(num_channels=num_features, **cfg_)
+        layer = norm_layer(device="cuda", num_channels=num_features, **cfg_)
 
     for param in layer.parameters():
         param.requires_grad = requires_grad

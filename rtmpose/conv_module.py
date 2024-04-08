@@ -178,7 +178,8 @@ class ConvModule(nn.Module):
             padding=conv_padding,
             dilation=dilation,
             groups=groups,
-            bias=bias)
+            bias=bias,
+            device="cuda")
         # export the attributes of self.conv to a higher level for convenience
         self.in_channels = self.conv.in_channels
         self.out_channels = self.conv.out_channels

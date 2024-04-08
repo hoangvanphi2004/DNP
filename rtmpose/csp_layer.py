@@ -20,7 +20,7 @@ class ChannelAttention(BaseModule):
     def __init__(self, channels: int, init_cfg = None) -> None:
         super().__init__(init_cfg=init_cfg)
         self.global_avgpool = nn.AdaptiveAvgPool2d(1)
-        self.fc = nn.Conv2d(channels, channels, 1, 1, 0, bias=True)
+        self.fc = nn.Conv2d(channels, channels, 1, 1, 0, bias=True, device="cuda")
         if digit_version(torch.__version__) < (1, 7, 0):
             self.act = nn.Hardsigmoid()
         else:

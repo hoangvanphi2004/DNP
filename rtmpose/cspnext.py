@@ -81,7 +81,8 @@ class CSPNeXt(BaseModule):
             a=math.sqrt(5),
             distribution='uniform',
             mode='fan_in',
-            nonlinearity='leaky_relu')
+            nonlinearity='leaky_relu',
+            device = "cuda")
     ) -> None:
         super().__init__(init_cfg=init_cfg)
         arch_setting = self.arch_settings[arch]
@@ -187,10 +188,10 @@ class CSPNeXt(BaseModule):
         outs = []
         for i, layer_name in enumerate(self.layers):
             layer = getattr(self, layer_name)
-            # time1 = time.time()
+            time1 = time.time()
             x = layer(x)
             if i in self.out_indices:
                 outs.append(x)
-            # time2 = time.time()
-            # print(f"backbone ->{i} ", time2 - time1)
+            time2 = time.time()
+            print(f"backbone ->{i} ", time2 - time1)
         return tuple(outs)
