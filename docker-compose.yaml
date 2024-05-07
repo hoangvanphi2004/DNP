@@ -1,5 +1,4 @@
----
-version: '2'
+version: '3.9'
 services:
   broker:
     image: confluentinc/cp-kafka:7.6.0
@@ -27,6 +26,3 @@ services:
       # Replace CLUSTER_ID with a unique base64 UUID using "bin/kafka-storage.sh random-uuid" 
       # See https://docs.confluent.io/kafka/operations-tools/kafka-tools.html#kafka-storage-sh
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
-  # dnp:
-  #   image: dnp/dnp:0.0.0
-  #   container_name: system

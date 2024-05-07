@@ -1,12 +1,9 @@
-td-hm_hrnet-w48_8xb32-210e_coco-256x192-0e67c616_20220913.pth
-td-hm_hrnet-w48_8xb32-210e_coco-256x192.py
 osnet_x0_25_msmt17.pt
 yolov5s.pt
 yolov8n.pt
 yolov8s.pt
-yolov5l.pt
-TetMarketRef.mp4
-RunningRef.mp4
 demo.jpg
 test.py
-output/*
+input/
+output/
+ckpt

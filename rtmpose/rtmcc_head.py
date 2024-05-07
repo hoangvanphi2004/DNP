@@ -115,7 +115,7 @@ class RTMCCHead(BaseHead):
             device="cuda")
         self.mlp = nn.Sequential(
             ScaleNorm(flatten_dims),
-            nn.Linear(flatten_dims, gau_cfg['hidden_dims'], bias=False))
+            nn.Linear(flatten_dims, gau_cfg['hidden_dims'], bias=False, device = "cuda"))
 
         W = int(self.input_size[0] * self.simcc_split_ratio)
         H = int(self.input_size[1] * self.simcc_split_ratio)
@@ -133,8 +133,8 @@ class RTMCCHead(BaseHead):
             use_rel_bias=gau_cfg['use_rel_bias'],
             pos_enc=gau_cfg['pos_enc'])
 
-        self.cls_x = nn.Linear(gau_cfg['hidden_dims'], W, bias=False)
-        self.cls_y = nn.Linear(gau_cfg['hidden_dims'], H, bias=False)
+        self.cls_x = nn.Linear(gau_cfg['hidden_dims'], W, bias=False, device = "cuda")
+        self.cls_y = nn.Linear(gau_cfg['hidden_dims'], H, bias=False, device = "cuda")
 
     def forward(self, feats: Tuple[Tensor]) -> Tuple[Tensor, Tensor]:
         """Forward the network.

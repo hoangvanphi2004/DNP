@@ -151,16 +151,16 @@ class RTMCCBlock(nn.Module):
             else:
                 self.a = nn.Parameter(torch.rand([1, s], dtype=torch.float, device = "cuda"))
                 self.b = nn.Parameter(torch.rand([1, s], dtype=torch.float, device = "cuda"))
-        self.o = nn.Linear(self.e, out_token_dims, bias=bias)
+        self.o = nn.Linear(self.e, out_token_dims, bias=bias, device = "cuda")
 
         if attn_type == 'self-attn':
-            self.uv = nn.Linear(in_token_dims, 2 * self.e + self.s, bias=bias)
+            self.uv = nn.Linear(in_token_dims, 2 * self.e + self.s, bias=bias, device = "cuda")
             self.gamma = nn.Parameter(torch.rand((2, self.s), device = "cuda"))
             self.beta = nn.Parameter(torch.rand((2, self.s), device = "cuda"))
         else:
-            self.uv = nn.Linear(in_token_dims, self.e + self.s, bias=bias)
-            self.k_fc = nn.Linear(in_token_dims, self.s, bias=bias)
-            self.v_fc = nn.Linear(in_token_dims, self.e, bias=bias)
+            self.uv = nn.Linear(in_token_dims, self.e + self.s, bias=bias, device = "cuda")
+            self.k_fc = nn.Linear(in_token_dims, self.s, bias=bias, device = "cuda")
+            self.v_fc = nn.Linear(in_token_dims, self.e, bias=bias, device = "cuda")
             nn.init.xavier_uniform_(self.k_fc.weight)
             nn.init.xavier_uniform_(self.v_fc.weight)
 

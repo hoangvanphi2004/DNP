@@ -66,12 +66,11 @@ class LatestFrameConsumer(KafkaConsumer):
 
         self.topic = TopicPartition("latest_frame", partition = 0)
     def receive_latest_frame(self):
-        msg = self.consumer.poll(0)
+        msg = self.consumer.poll(0.15)
 
         topic_with_latest_offset = TopicPartition("latest_frame", partition = 0, offset = OFFSET_END)
         self.consumer.assign([topic_with_latest_offset])
-
-        time.sleep(0.1)
+        
         if msg is None:
             #print("Waiting...")
             pass

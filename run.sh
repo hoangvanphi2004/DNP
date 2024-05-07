@@ -12,7 +12,7 @@ tmux new-session -d -s ss
 for i in {1..5}
 do  
     tmux new-window -t ss:$i
-    tmux send-keys -t ss:$i 'conda activate DNP' C-m
+    # tmux send-keys -t ss:$i 'conda activate DNP' C-m
     case $i in
         1)
             tmux send-keys -t ss:1 'docker-compose up' C-m
@@ -24,7 +24,6 @@ do
             tmux send-keys -t ss:2 'python3 sendVideo.py' C-m
             ;;
         3)  
-            #python3 predictBoundingBox.py
             tmux send-keys -t ss:3 'python3 predictBoundingBox.py' C-m
             ;;
         4)
@@ -35,4 +34,4 @@ do
             ;;
     esac  
 done
-
+#python3 predictBoundingBox.py

@@ -2,7 +2,7 @@ import numpy as np
 import cv2 as cv
 
 class VideoReader:
-    def __init__(self, video = 'iai_video_1.mp4'):
+    def __init__(self, video):
         self.cap = cv.VideoCapture(video)
         self.frame_number = 0
 

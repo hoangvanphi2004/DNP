@@ -75,7 +75,7 @@ class WholeBody:
             decoder=codec
         )
 
-        model = torch.load("rtmpose-l_simcc-coco-wholebody_pt-aic-coco_270e-384x288-eaeb96c8_20230125.pth")
+        model = torch.load("ckpt/rtmpose-l_simcc-coco-wholebody_pt-aic-coco_270e-384x288-eaeb96c8_20230125.pth")
         headState = {k[5:]: v for k, v in model['state_dict'].items() if k.startswith('head')}
         backboneState = {k[9:]: v for k, v in model['state_dict'].items() if k.startswith('backbone')}
         self.head.load_state_dict(headState)

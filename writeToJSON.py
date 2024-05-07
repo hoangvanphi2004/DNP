@@ -19,21 +19,40 @@ class JSONWriter:
         #print(boundingBoxs.shape, keypointsList.shape);
         data = {
             "frame_id": frameId,
-            "data": [{
-                "bounding_box": {
-                    "xmin": boundingBoxs[i, 0],
-                    "ymin": boundingBoxs[i, 1], 
-                    "xmax": boundingBoxs[i, 2], 
-                    "ymax": boundingBoxs[i, 3]
+            "img_w": 640,
+            "img_h": 480,
+            "approach": {
+                k: {
+                    "tl_coord2d": v[: 2].tolist(),
+                    "br_coord2d": v[2:].tolist()
+                } for k, v in zip(ids, boundingBoxs)
+            },
+            "action": {
+                
+            },
+            "pose": {
+                "person": {
+                    k: {
+                        index: point.tolist() for index, point in enumerate(v)
+                    } for k, v in zip(ids, keypointsList)
                 },
-                "id": ids[i],
-                "keypoints": [{
-                    "x": keypoint[0],
-                    "y": keypoint[1]
-                } 
-                for keypoint in keypointsList[i, :]]
+                "Datetime": str(datetime.now())
             }
-            for i in range(boundingBoxs.shape[0])]
+            # "data": [{
+            #     "bounding_box": {
+            #         "xmin": boundingBoxs[i, 0],
+            #         "ymin": boundingBoxs[i, 1], 
+            #         "xmax": boundingBoxs[i, 2], 
+            #         "ymax": boundingBoxs[i, 3]
+            #     },
+            #     "id": ids[i],
+            #     "keypoints": [{
+            #         "x": keypoint[0],
+            #         "y": keypoint[1]
+            #     } 
+            #     for keypoint in keypointsList[i, :]]
+            # }
+            # for i in range(boundingBoxs.shape[0])]
         }
         with open(self.filename, 'a') as f:
             json.dump(data, f)

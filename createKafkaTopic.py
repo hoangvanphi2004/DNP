@@ -1,5 +1,6 @@
 from confluent_kafka.admin import AdminClient, NewTopic
 from configparser import ConfigParser
+import time
 
 def createKafkaServer():
     config_parser = ConfigParser()

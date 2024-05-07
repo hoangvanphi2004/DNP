@@ -22,8 +22,8 @@ RUN pip install chardet
 RUN pip install confluent-kafka
 RUN pip install ultralytics
 
-COPY . .
-
 RUN pip install configparser
+RUN apt install nano
+RUN apt-get install coreutils
 
-CMD [ "./run.sh" ]
+COPY . .

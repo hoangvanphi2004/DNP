@@ -8,7 +8,7 @@ import os
 if __name__ == "__main__":
     latestFrameConsumer = consumer.LatestFrameConsumer("latest_frame")
     frameProducer = producer.FrameProducer()
-    boundingBoxPrediction = boundingBoxDetection.YOLOv5()
+    boundingBoxPrediction = boundingBoxDetection.YOLOv8()
     boundingBoxProducer = producer.BoundingBoxProducer()
     keypointsConsumer = consumer.KeypointsConsumer("receive_back_keypoints")
     setupProducer = producer.SetupProducer()
@@ -59,4 +59,5 @@ if __name__ == "__main__":
         keypointsConsumer.consumer.close()
         boundingBoxProducer.producer.flush()
         frameProducer.producer.flush()
-    os.system("./close.sh")
+        setupConsumer.consumer.close()
+    #os.system("./close.sh")

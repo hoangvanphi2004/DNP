@@ -40,6 +40,7 @@ if __name__ == "__main__":
             
             while(len(frames) > 0 and len(boundingBoxQueue) > 0):
                 #print(frames.qsize())
+                #print(frames, boundingBoxQueue)
                 boundingBoxData = boundingBoxQueue[0];
                 frame = frames[0]
                 while frame['offset'] < boundingBoxData['offset'] and len(frames) > 1:
