@@ -9,7 +9,6 @@ def deleteKafkaServer():
     admin_client = AdminClient(config)
     new_topics = []
 
-    admin_client.delete_topics(['bounding_box', 'frame', 'keypoints', 'latest_frame', 'setup'])
-    print(admin_client.list_topics().topics)
+    admin_client.delete_topics(['bounding_box', 'frame', 'keypoints', 'latest_frame', 'setup', 'end'])
 
 deleteKafkaServer()

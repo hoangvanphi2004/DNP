@@ -20,9 +20,6 @@ class KafkaProducer:
     def delivery_callback(self, err, msg):
         if err:
             print('ERROR: Message failed delivery: {}'.format(err))
-        else:
-            print("Produced event to topic {topic}".format(
-                topic=msg.topic()))
             
 class SetupProducer(KafkaProducer):
     def __init__(self):
@@ -31,6 +28,7 @@ class SetupProducer(KafkaProducer):
     def send_setup_value(self, setupValue):
         self.producer.produce("setup", value = str(setupValue), callback=self.delivery_callback)
         self.producer.poll(0)
+        
 class FrameProducer(KafkaProducer):
     def __init__(self):
         super().__init__()

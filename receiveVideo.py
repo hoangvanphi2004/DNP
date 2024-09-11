@@ -1,3 +1,6 @@
+import ReIDs.re_id_new_id
+import ReIDs.re_id_sitting_person
+import ReIDs.staff_mark
 import consumer
 import producer
 import boundingBoxDetection
@@ -7,6 +10,8 @@ import time
 import writeVideo
 import writeToJSON
 import ReID
+import os
+import ReIDs
 from random import randint
 
 from queue import Queue
@@ -41,6 +46,7 @@ if __name__ == "__main__":
     tracking = ReID.Track()
     setupProducer.send_setup_value(2)
     setupProducer.producer.flush()
+    setupConsumer = consumer.SetupConsumer("receive_video")
     
     try:
         framesQueue = []
@@ -50,7 +56,11 @@ if __name__ == "__main__":
             retBoundingBox, boundingBoxData, offset = boundingBoxConsumer.receive_bounding_box()
             retKeypoints, keypointsData, offset = keypointsConsumer.receive_keypoints()
             retFrame, frame, offset = frameConsumer.receive_frame()
-                
+            retSetup, setupValue = setupConsumer.receive_setup_value()
+
+            if setupValue == 5:
+                break    
+
             if retFrame:
                 framesQueue.append(frame);
              
@@ -61,8 +71,6 @@ if __name__ == "__main__":
                 keypointsQueue.append(keypointsData)
 
             while(len(keypointsQueue) > 0 and len(boundingBoxsQueue) > 0 and len(framesQueue) > 0):
-                #print(framesQueue.qsize(), boundingBoxsQueue.qsize(), keypointsData['offset'])
-                #print(len(keypointsQueue), len(boundingBoxsQueue), len(framesQueue))
                 keypointsData = keypointsQueue[0]
                 frame = framesQueue[0]
                 while frame['offset'] < keypointsData['offset'] and len(framesQueue) > 1:
@@ -85,7 +93,8 @@ if __name__ == "__main__":
                 framesQueue.pop(0)
                 boundingBoxsQueue.pop(0)
                 keypointsQueue.pop(0)
-                
+
+                frameOffset = frame["offset"];
                 frame = frame['data']
                 boundingBoxs = boundingBoxs["data"]
                 keypointsList = keypointsData["data"]
@@ -94,22 +103,26 @@ if __name__ == "__main__":
                     boundingBoxs = np.array(boundingBoxs)
                     boundingBoxs, keypointsList = ReID.deleteOverLap(boundingBoxs = boundingBoxs, keypointLists = keypointsList)
                     boundingBoxs = np.array(tracking.tracking(boundingBoxs = boundingBoxs, frame = frame))
+                    ReID.push(boundingBoxs, keypointsList)
                     if boundingBoxs.shape[0] != 0:
                         jsonWriter.write_data(boundingBoxs = boundingBoxs[:, : 4], ids = boundingBoxs[:, 4], keypointsList = keypointsList, frameId = keypointsData["offset"])
-                
-                #print("frame", frame, "bb", len(boundingBoxs), "kps", len(keypointsList))
 
                 showing_frame = frame
-
                 for index in range(len(boundingBoxs)):
                     keypoints = keypointsList[index]
                     boundingBox = boundingBoxs[index]
                     showing_frame = draw(boundingBox, keypoints, frame)
                 
                 videoWriter.write(showing_frame)
+                print(f"{frameOffset} frames have been analized.")
     except KeyboardInterrupt:
         pass
     finally:
         frameConsumer.consumer.close()
         boundingBoxConsumer.consumer.close()
         keypointsConsumer.consumer.close()
+
+    ReIDs.re_id_sitting_person.main(jsonWriter.filename)
+    ReIDs.re_id_new_id.main(jsonWriter.filename)
+    ReIDs.staff_mark.main(jsonWriter.filename)
+    print("Your video have been analized successfully!")

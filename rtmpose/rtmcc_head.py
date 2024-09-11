@@ -213,10 +213,7 @@ class RTMCCHead(BaseHead):
         else:
             batch_pred_x, batch_pred_y = self.forward(feats)
             
-        # time1 = time.time()
         preds = self.decode((batch_pred_x, batch_pred_y))
-        # time2 = time.time()
-        # print("head -> ", time2 - time1);
         if test_cfg.get('output_heatmaps', False):
             rank, _ = get_dist_info()
             if rank == 0:

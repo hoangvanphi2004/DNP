@@ -83,47 +83,19 @@ class WholeBody:
     
     def predict(self, image):
         image = np.array(image)
+
         # (height, width, channel)
         scaleInput = (image.shape[1] / self.input_size[0], image.shape[0] / self.input_size[1])
         image = cv2.resize(image, self.input_size)
         image = torch.from_numpy(np.array(image).swapaxes(0, 2).swapaxes(1, 2))
         image = image.to("cuda").unsqueeze(0).type(torch.float32)
-        
-        #print("police here !!!")
-        time1 = time.time()
+
         res = self.data_preprocessor.forward({"inputs": image, "data_samples": None})
         res = res["inputs"].to("cuda")
-        time2 = time.time()
-        # plt.imshow(res[0].permute(1, 2, 0))
-        # plt.show()
-        # print(res.size())
-
         res = self.backbone.forward(res)
-        time3 = time.time()
-        
         res = self.head.predict(res, None)
-        time4 = time.time()
-        #print(time4 - time3, time3 - time2, time2 - time1)
-        print("summary", time4 - time1)
-        
+
         res = np.array(res[0]["keypoints"][0])
         res[:, 0] = res[:, 0] * scaleInput[0]
         res[:, 1] = res[:, 1] * scaleInput[1]
         return res
-
-# print(res[0].size(), res[1].size())
-# image = Image.open("image.jpg")
-# model = WholeBody()
-# res = model.predict(image)
-# res = np.array(res, dtype = np.int16)
-# image = np.array(image)
-# for i in range(res.shape[0]):
-#     if(res[i, 1] > 0 and res[i, 0] > 0):
-#         for j in range(1):
-#             for k in range(1):          
-#                 image[res[i, 1] + j, res[i, 0] + k, :] = np.array([0, 0, 0])
-        
-        
-# plt.imshow(image)
-# plt.show()
-# plt.imshow(res)

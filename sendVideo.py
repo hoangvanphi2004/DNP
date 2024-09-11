@@ -25,7 +25,7 @@ if __name__ == "__main__":
     
     for path in glob.glob("./input/*"):
         videoReader = readVideo.VideoReader(path)
-        print(path)
+        print(f"Read from: {path}")
         while True:
             time1 = time.time();
             ret, frame, frame_number  = videoReader.read_frame()
@@ -36,10 +36,8 @@ if __name__ == "__main__":
             frame = cv.resize(frame, (640, 480))
             frameProducer.send_latest_frame(frame)
             time3 = time.time();
-            time.sleep(0.1)
+            time.sleep(0.05)
             cnt += 1;
-            print(cnt)
-            #print(time2 - time1, " -> ", time3 - time2)
         
     setupProducer.send_setup_value(3)
     frameProducer.producer.flush()

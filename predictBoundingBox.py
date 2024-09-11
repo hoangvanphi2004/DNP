@@ -2,7 +2,6 @@ import consumer
 import producer
 import boundingBoxDetection
 import cv2 as cv
-import time
 import os
 
 if __name__ == "__main__":
@@ -36,6 +35,7 @@ if __name__ == "__main__":
                         "data": boundingBox,
                     }
                 elif isEnd:
+                    setupProducer.send_setup_value(5)
                     break
                 
             if (retKeypoints or firstTime) and boundingBox != None:
@@ -43,21 +43,11 @@ if __name__ == "__main__":
                 boundingBoxProducer.send_bounding_box(boundingBox)
                 boundingBox = None
                 firstTime = False
-            
-            # print(time2 - time1, " -> ", time3 - time2);
-            #     cv.imshow("frame", frame)
-            #     if cv.waitKey(1) == ord('q'):
-            #         break
-            # else:
-            #     cv.destroyAllWindows()
-            #time.sleep(0.5)
     except KeyboardInterrupt:
         pass
     finally:
-        # cv.destroyAllWindows()
         latestFrameConsumer.consumer.close()
         keypointsConsumer.consumer.close()
         boundingBoxProducer.producer.flush()
         frameProducer.producer.flush()
         setupConsumer.consumer.close()
-    #os.system("./close.sh")

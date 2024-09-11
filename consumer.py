@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import sys
 from argparse import ArgumentParser, FileType
 from configparser import ConfigParser
@@ -30,13 +28,10 @@ class SetupConsumer(KafkaConsumer):
     def receive_setup_value(self):
         msg = self.consumer.poll(0)
         if msg is None:
-            #print("Waiting...")
             pass
         elif msg.error():
             print("ERROR: %s".format(msg.error()))
         else:
-            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
-                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, int(msg.value())
         return False, 0
     
@@ -47,13 +42,10 @@ class FrameConsumer(KafkaConsumer):
     def receive_frame(self):
         msg = self.consumer.poll(0)
         if msg is None:
-            #print("Waiting...")
             pass
         elif msg.error():
             print("ERROR: %s".format(msg.error()))
         else:
-            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
-                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, {
                 "offset": int(msg.key()),
                 "data": np.array(list(msg.value())).reshape(480, 640, 3).astype(np.uint8)
@@ -72,13 +64,10 @@ class LatestFrameConsumer(KafkaConsumer):
         self.consumer.assign([topic_with_latest_offset])
         
         if msg is None:
-            #print("Waiting...")
             pass
         elif msg.error():
             print("ERROR: %s".format(msg.error()))
         else:
-            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
-                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, np.array(list(msg.value())).reshape(480, 640, 3).astype(np.uint8), msg.offset()
         return False, 0, 0
 
@@ -89,13 +78,10 @@ class BoundingBoxConsumer(KafkaConsumer):
     def receive_bounding_box(self):
         msg = self.consumer.poll(0)
         if msg is None:
-            #print("Waiting...")
             pass
         elif msg.error():
             print("ERROR: %s".format(msg.error()))
         else:
-            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
-                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, json.loads(msg.value()), msg.offset()
         return False, 0, 0
     
@@ -106,13 +92,10 @@ class KeypointsConsumer(KafkaConsumer):
     def receive_keypoints(self):
         msg = self.consumer.poll(0)
         if msg is None:
-            #print("Waiting...")
             pass
         elif msg.error():
             print("ERROR: %s".format(msg.error()))
         else:
-            print("Consumed event from topic {topic}: offset = {offset} partition = {partition}".format(
-                topic=msg.topic(), offset=msg.offset(), partition = msg.partition()))
             return True, json.loads(msg.value()), msg.offset()
         return False, 0, 0
 
