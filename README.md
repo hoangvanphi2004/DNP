@@ -3,45 +3,34 @@
   # DNP Project
   
 </div>
+
 ## 1. Introduce
-The purpose of this project is to build a system to detect people pose in a video.
-## 2. How to use
-1. First you need to download docker and run docker, install miniconda and install cuda
-2. Clone this repo
-3. Now, install Kafka:
+This project was created during the time i was learning in IAI lab. This project is about a system detect body keypoints, position of staffs and students in a classroom.
+## 2. Technology
+This is some model i use in this project:
++ YOLOv8 for detect person in class
++ OCSORT for tracking people in class
++ rtmpose for detect body keypoints
+Beside, i also use some platform to delivery the system to user easier. I use:
++ Docker for create light container, make it easier to deploy
++ Kafka for process management 
+## 3. How to use
+### 3.1 Extract video information
+1. First you need to have docker installed in your computer, you can download it <a href="https://www.docker.com/products/docker-desktop/">here</a>
+2. Pull <a href="https://hub.docker.com/repository/docker/philosophi1/dnp/general">this</a> docker image to your computer 
+3. Clone this repo to the folder you want.
+4. Create folder name "ckpt" in the repo folder. After that:
+   + Download <a href="https://download.openmmlab.com/mmpose/v1/projects/rtmw/rtmw-dw-x-l_simcc-cocktail14_270e-256x192-20231122.pth">this </a> model and move it to "ckpt" folder. This is the model to detect body keypoints
+   + Download <a href="https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt">this</a> model and move it to "ckpt" folder. This is the model to detect person. 
+5. Create "input" folder in the repo folder. Move the video you want to detect into this folder.
+6. After that, run this command:
+ ```bash
+ docker compose up
+ ```
+7. Wait until the process is done!
+The video information would be saved in output folder as a json file.
+After the process is done. Remember to run the command
 ```bash
-pip install confluent-kafka
+docker compose down
 ```
-4. After that, create conda environment, install MMEngine, MMCV, MMPOSE using MIM, BoxMOT and install ultralytics:
-```bash
-conda create --name DNP python=3.8 -y
-pip install -U openmim
-mim install mmengine
-mim install "mmcv>=2.0.1"
-mim install "mmdet>=3.1.0"
-mim install "mmpose>=1.1.0"
-conda install -c conda-forge ultralytics
-pip install boxmot
-```
-5. Download the config file:
-```bash
-mim download mmpose --config td-hm_hrnet-w48_8xb32-210e_coco-256x192  --dest .
-```
-6. Run each block in different commandline windows:
-```bash
-conda activate DNP
-docker-compose up
-```
-```bash
-conda activate DNP
-python createKafkaTopic.py
-python predictPose.py
-```
-```bash
-conda activate DNP
-python predictBoundingBox.py
-```
-```bash
-conda activate DNP
-python sendVideo.py
-```
+To shutdown the system
