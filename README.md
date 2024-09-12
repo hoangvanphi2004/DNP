@@ -23,7 +23,7 @@ Beside, i also use some platform to delivery the system to user easier. I use:
    + Download <a href="https://download.openmmlab.com/mmpose/v1/projects/rtmw/rtmw-dw-x-l_simcc-cocktail14_270e-256x192-20231122.pth">this </a> model and move it to "ckpt" folder. This is the model to detect body keypoints
    + Download <a href="https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt">this</a> model and move it to "ckpt" folder. This is the model to detect person. 
 5. Create "input" folder in the repo folder. Move the video you want to detect into this folder.
-6. After that, run this command:
+6. After that, run this command in commandline:
  ```bash
  docker compose up
  ```
@@ -34,3 +34,20 @@ After the process is done. Remember to run the command
 docker compose down
 ```
 To shutdown the system
+### 3.2 Visulize video information
+1. Go to the output folder, create folder name "visualize".
+2. Run this command in commandline:
+```bash
+python3 visualize.py [json_file_you_want_to_visualize] [background_image_path]
+```
+This will visualize your json file (video information file) on the background image. If you just want a black background, you can leave it blank.
+## 4. Credit and Contact
+Thanks to Du Pham for helping me in the project.
+If you find any issues about my project or want to contribute, please contact me:
++ Email: hoangvanphi2004@gmail.com
++ Facebook: fb.com/hoangvanphi2004
+<div align="center">
+
+  # Thanks for visiting my project
+  
+</div>
