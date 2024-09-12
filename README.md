@@ -5,7 +5,7 @@
 </div>
 
 ## 1. Introduce
-This project was created during the time i was learning in IAI lab. This project is about a system detect body keypoints, position of staffs and students in a classroom.
+This project was created during the time i was learning in IAI lab. This project is about a system which detect body keypoints, position of staffs and students in a classroom.
 ## 2. Technology
 This is some model i use in this project:
 + YOLOv8 for detect person in class
