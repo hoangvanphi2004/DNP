@@ -30,7 +30,35 @@ Beside, i also use some platform to delivery the system to user easier. I use:
  ```
 7. Wait until the process is done!
 
-The video information would be saved in output folder as a json file. 
+The video information would be saved in output folder as a json file. The structure of the file look like this:
+
+```python
+{
+    "frame_id": [frame id],
+    "img_w": [width of frame],
+    "img_h": [height of frame],
+    "approach": {
+        [bounding box id]: {
+            "tl_coord2d": [top left point],
+            "br_coord2d": [bottom right point]
+        } 
+    },
+    "action": {
+        //This part is for my future work
+    },
+    "pose": {
+        "persons": {
+            [person id]: {
+                [point id]: [keypoint]
+            }
+        },
+        "is_staff":{
+            [person id]: [1 if the person is staff 0 otherwise]
+        },
+        "Datetime": [the time frame is captured]
+    }
+}
+```
 
 After the process is done. Remember to run this command to shutdown the system
 
