@@ -9,3 +9,5 @@ pose.jl
 close.sh
 run.sh
 requirements.txt
+output/re_id_new_id.py
+output/re_id_sitting_person.py

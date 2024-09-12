@@ -1,9 +1,2 @@
-osnet_x0_25_msmt17.pt
-yolov5s.pt
-yolov8n.pt
-yolov8s.pt
-demo.jpg
-test.py
 input/
 output/
-ckpt

@@ -1,6 +1,4 @@
-import ReIDs.re_id_new_id
-import ReIDs.re_id_sitting_person
-import ReIDs.staff_mark
+import staff_mark
 import consumer
 import producer
 import boundingBoxDetection
@@ -11,7 +9,6 @@ import writeVideo
 import writeToJSON
 import ReID
 import os
-import ReIDs
 from random import randint
 
 from queue import Queue
@@ -40,7 +37,6 @@ if __name__ == "__main__":
     frameConsumer = consumer.FrameConsumer("receive_video")
     boundingBoxConsumer = consumer.BoundingBoxConsumer("receive_video")
     keypointsConsumer = consumer.KeypointsConsumer("receive_video")
-    videoWriter = writeVideo.VideoWriter()
     jsonWriter = writeToJSON.JSONWriter()
     setupProducer = producer.SetupProducer()
     tracking = ReID.Track()
@@ -106,14 +102,11 @@ if __name__ == "__main__":
                     ReID.push(boundingBoxs, keypointsList)
                     if boundingBoxs.shape[0] != 0:
                         jsonWriter.write_data(boundingBoxs = boundingBoxs[:, : 4], ids = boundingBoxs[:, 4], keypointsList = keypointsList, frameId = keypointsData["offset"])
-
-                showing_frame = frame
-                for index in range(len(boundingBoxs)):
-                    keypoints = keypointsList[index]
-                    boundingBox = boundingBoxs[index]
-                    showing_frame = draw(boundingBox, keypoints, frame)
+                    else:
+                        jsonWriter.write_data(boundingBoxs = np.array([]), ids = np.array([]), keypointsList = np.array([]), frameId = keypointsData["offset"])
+                else:
+                    jsonWriter.write_data(boundingBoxs = np.array([]), ids = np.array([]), keypointsList = np.array([]), frameId = keypointsData["offset"])
                 
-                videoWriter.write(showing_frame)
                 print(f"{frameOffset} frames have been analized.")
     except KeyboardInterrupt:
         pass
@@ -122,7 +115,5 @@ if __name__ == "__main__":
         boundingBoxConsumer.consumer.close()
         keypointsConsumer.consumer.close()
 
-    ReIDs.re_id_sitting_person.main(jsonWriter.filename)
-    ReIDs.re_id_new_id.main(jsonWriter.filename)
-    ReIDs.staff_mark.main(jsonWriter.filename)
+    staff_mark.main(jsonWriter.filename)
     print("Your video have been analized successfully!")

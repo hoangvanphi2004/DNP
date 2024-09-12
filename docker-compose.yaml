@@ -26,7 +26,7 @@ services:
       CLUSTER_ID: 'MkU3OEVBNTcwNTJENDM2Qk'
 
   send_video:
-    image: 0ielts/dnp:0.0.0
+    image: philosophi1/dnp:0.0.0
     hostname: send_video
     container_name: send_video
     command: sh -c "sleep 10 && python3 deleteKafkaTopic.py && python3 createKafkaTopic.py && python3 sendVideo.py"
@@ -43,7 +43,7 @@ services:
       - ${PWD}/input:/input
       - ${PWD}/output:/output
   bounding_box:
-    image: 0ielts/dnp:0.0.0
+    image: philosophi1/dnp:0.0.0
     hostname: bounding_box
     container_name: bounding_box
     command: sh -c "sleep 10 && python3 predictBoundingBox.py"
@@ -60,7 +60,7 @@ services:
       - ${PWD}/input:/input
       - ${PWD}/output:/output
   pose:
-    image: 0ielts/dnp:0.0.0
+    image: philosophi1/dnp:0.0.0
     hostname: pose
     container_name: pose
     command: sh -c "sleep 10 && python3 predictPose.py"
@@ -77,7 +77,7 @@ services:
       - ${PWD}/input:/input
       - ${PWD}/output:/output
   receive_video:
-    image: 0ielts/dnp:0.0.0
+    image: philosophi1/dnp:0.0.0
     hostname: receive_video
     container_name: receive_video
     command: sh -c "sleep 10 && python3 receiveVideo.py"

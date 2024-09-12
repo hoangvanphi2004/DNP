@@ -35,6 +35,9 @@ class JSONWriter:
                         index: [point[0] / 680, point[1] / 480] for index, point in enumerate(v)
                     } for k, v in zip(ids, keypointsList)
                 },
+                "is_staff":{
+
+                },
                 "Datetime": str(datetime.now())
             }
         }
