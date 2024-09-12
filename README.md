@@ -38,7 +38,7 @@ After the process is done. Remember to run this command to shutdown the system
 docker compose down
 ```
 
-### 3.2 Visulize video information
+### 3.2 Visualize video information
 1. Go to the output folder, create folder name "visualize".
 2. Run this command in commandline:
 ```bash
