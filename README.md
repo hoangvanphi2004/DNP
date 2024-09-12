@@ -11,6 +11,7 @@ This is some model i use in this project:
 + YOLOv8 for detect person in class
 + OCSORT for tracking people in class
 + rtmpose for detect body keypoints
+
 Beside, i also use some platform to delivery the system to user easier. I use:
 + Docker for create light container, make it easier to deploy
 + Kafka for process management 
@@ -28,12 +29,15 @@ Beside, i also use some platform to delivery the system to user easier. I use:
  docker compose up
  ```
 7. Wait until the process is done!
-The video information would be saved in output folder as a json file.
-After the process is done. Remember to run the command
+
+The video information would be saved in output folder as a json file. 
+
+After the process is done. Remember to run this command to shutdown the system
+
 ```bash
 docker compose down
 ```
-To shutdown the system
+
 ### 3.2 Visulize video information
 1. Go to the output folder, create folder name "visualize".
 2. Run this command in commandline:
@@ -43,6 +47,7 @@ python3 visualize.py [json_file_you_want_to_visualize] [background_image_path]
 This will visualize your json file (video information file) on the background image. If you just want a black background, you can leave it blank.
 ## 4. Credit and Contact
 Thanks to Du Pham for helping me in the project.
+
 If you find any issues about my project or want to contribute, please contact me:
 + Email: hoangvanphi2004@gmail.com
 + Facebook: fb.com/hoangvanphi2004
