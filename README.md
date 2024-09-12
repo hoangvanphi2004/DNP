@@ -7,13 +7,13 @@
 ## 1. Introduce
 This project was created during the time i was learning in IAI lab. This project is about a system which detect body keypoints, position of staffs and students in a classroom.
 ## 2. Technology
-This is some model i use in this project:
-+ YOLOv8 for detect person in class
+These are some models i use in this project:
++ YOLOv8 for detecting person in class
 + OCSORT for tracking people in class
-+ rtmpose for detect body keypoints
++ rtmpose for detecting body keypoints
 
-Beside, i also use some platform to delivery the system to user easier. I use:
-+ Docker for create light container, make it easier to deploy
+Beside, i also use some platforms to deliver the system to user easier. I use:
++ Docker for creating light container, make it easier to deploy
 + Kafka for process management 
 ## 3. How to use
 ### 3.1 Extract video information
@@ -21,7 +21,7 @@ Beside, i also use some platform to delivery the system to user easier. I use:
 2. Pull <a href="https://hub.docker.com/repository/docker/philosophi1/dnp/general">this</a> docker image to your computer 
 3. Clone this repo to the folder you want.
 4. Create folder name "ckpt" in the repo folder. After that:
-   + Download <a href="https://download.openmmlab.com/mmpose/v1/projects/rtmw/rtmw-dw-x-l_simcc-cocktail14_270e-256x192-20231122.pth">this </a> model and move it to "ckpt" folder. This is the model to detect body keypoints
+   + Download <a href="https://download.openmmlab.com/mmpose/v1/projects/rtmw/rtmw-dw-x-l_simcc-cocktail14_270e-256x192-20231122.pth">this</a> model and move it to "ckpt" folder. This is the model to detect body keypoints
    + Download <a href="https://github.com/ultralytics/assets/releases/download/v8.2.0/yolov8l.pt">this</a> model and move it to "ckpt" folder. This is the model to detect person. 
 5. Create "input" folder in the repo folder. Move the video you want to detect into this folder.
 6. After that, run this command in commandline:
@@ -30,7 +30,7 @@ Beside, i also use some platform to delivery the system to user easier. I use:
  ```
 7. Wait until the process is done!
 
-The video information would be saved in output folder as a json file. The structure of the file look like the code below, for more information, please checkout in <a href="https://github.com/hoangvanphi2004/DNP/blob/main/writeToJSON.py">writeToJSON.py</a> file.
+The video information would be saved in output folder as an json file. The structure of the file look like the code below, for more information, please checkout in <a href="https://github.com/hoangvanphi2004/DNP/blob/main/writeToJSON.py">writeToJSON.py</a> file.
 
 ```python
 {
@@ -60,7 +60,7 @@ The video information would be saved in output folder as a json file. The struct
 }
 ```
 
-After the process is done, remember to run this command to turn off the system
+After the process is done, remember to run this command to turn off the system:
 
 ```bash
 docker compose down
