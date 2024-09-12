@@ -60,7 +60,7 @@ The video information would be saved in output folder as a json file. The struct
 }
 ```
 
-After the process is done. Remember to run this command to shutdown the system
+After the process is done, remember to run this command to shutdown the system
 
 ```bash
 docker compose down
