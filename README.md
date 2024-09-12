@@ -30,7 +30,7 @@ Beside, i also use some platform to delivery the system to user easier. I use:
  ```
 7. Wait until the process is done!
 
-The video information would be saved in output folder as a json file. The structure of the file look like this:
+The video information would be saved in output folder as a json file. The structure of the file look like the code below, for more information, please checkout in <a href="https://github.com/hoangvanphi2004/DNP/blob/main/writeToJSON.py">writeToJSON.py</a> file.
 
 ```python
 {
