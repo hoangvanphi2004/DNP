@@ -1,4 +1,8 @@
-# DNP Project
+<div align="center">
+
+  # DNP Project
+  
+</div>
 ## 1. Introduce
 The purpose of this project is to build a system to detect people pose in a video.
 ## 2. How to use
