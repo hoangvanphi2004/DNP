@@ -67,6 +67,13 @@ docker compose down
 ```
 
 ### 3.2 Visualize video information
+To do this you must have opencv and numpy installed in your computer. To do this, run these commands:
+```bash
+pip install opencv-python
+pip install numpy
+```
+After that you can follow the following lines to visualize the keypoints:
+
 1. Go to the output folder, create folder name "visualize".
 2. Run this command in commandline:
 ```bash
